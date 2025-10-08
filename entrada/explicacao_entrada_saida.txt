@@ -1,0 +1,36 @@
+D   durabilidade atual do expresso
+D'  durabilidade dimuida quando passa em um setor
+A   durabilidade aumentada quando pega uma peça
+
+D   D'  A
+20  5   10
+
+Dimensões do mapa em ALTURA e LARGURA
+H L
+7 10
+
+MAPA
+X   posição inicial do expresso
+P   peça para o concerto (aumenta durabilidade)
+F   destino final
+.   não pode passar por aqui (não é caminho)
+-   só tem a opcao de ir pra ESQ e DIR
+|   só tem a opção de ir pra CIMA e BAIXO
++   ENCRUZILHADA
+
+P-+...+--+
+|.X...|..|
++-+-P-+..P
+|.|...P..|
+P.|...FP-+
+|.|......|
++-P------+
+
+SAÍDA - percurso possível
+Linha: 1, Coluna: 2; D: 20, peças restantes: 4
+Linha: 2, Coluna: 2; D: 15, peças restantes: 4
+Linha: 3, Coluna: 2; D: 10, peças restantes: 4
+Linha: 4, Coluna: 2; D: 20, peças restantes: 3
+Linha: 5, Coluna: 2; D: 15, peças restantes: 3
+Linha: 6, Coluna: 2; D: 10, peças restantes: 3
+linha: 7, Coluna: 2; D: 5, peças restantes: 3
