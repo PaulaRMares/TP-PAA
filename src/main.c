@@ -12,7 +12,8 @@ int main(){
         printf("\n ====================== MENU ====================== \n");
         printf("1) Digite o nome do mapa a ser usado na exploracao: \n");
         printf("2) Encontrar caminho viavel para a celebracao \n");
-        printf("3) Sair do programa \n");
+        printf("3) Imprimir mapa\n");
+        printf("4) Sair do programa \n");
 
         scanf("%d", &opcao);
         
@@ -29,9 +30,15 @@ int main(){
                     break;
                 }else{
                     imprimeMapa();
+                    bool ok = encontrarCaminho(&expresso);
                 }
 
                 break;
+            case 3:
+                {
+                    printf("Imprimindo o mapa");
+                    imprimeMapa();
+                }
             default:
                 break;
         }

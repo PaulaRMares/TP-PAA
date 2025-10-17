@@ -30,9 +30,9 @@ void lerArquivo(char *nome_arquivo, Expresso *expresso){
     fscanf(arquivo, "%d %d", &altura, &largura);
 
     // aloca memoria pro mapa
-    mapa = (char **)malloc(altura * sizeof(int *));
-    for(int i=0; i<altura; i++){
-        mapa[i] = (char *)malloc(largura * sizeof(int));
+    mapa = (char **)malloc(altura * sizeof(char *));
+    for (int i = 0; i < altura; i++) {
+    mapa[i] = (char *)malloc(largura * sizeof(char));
     }
 
     // le o mapa do arquivo
