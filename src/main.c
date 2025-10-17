@@ -5,16 +5,19 @@ int main(){
     int opcao = 0;
     char arquivo[100];
     Expresso expresso;
-    
+    bool modo_analise_ativo = false;
+
     printf("\nOs cientistas espaciais fizeram um programa para calcular um caminho possivel para a celebracao.\nVoce pode usar o programa, mas como dono do expresso tera que aumentar o salario de todos os \ncientistas que ajudaram no processo :) (nao negociavel) \n");
 
-     while(opcao != 5){
+    while(opcao != 6){
         printf("\n ====================== MENU ====================== \n");
+        printf("Status do modo de analise: %s\n", modo_analise_ativo ? "ATIVADO" : "DESATIVADO");
         printf("1) Digite o nome do mapa a ser usado na exploracao\n");
         printf("2) Encontrar caminho (imprimindo passos)\n");
         printf("3) Imprimir mapa\n");
-        printf("4) Modo de analise (tempo, chamadas, profundidade)\n");
-        printf("5) Sair do programa\n");
+        printf("4) Encontrar caminho (sem imprimir passos)\n");
+        printf("5) Ativar/Desativar modo de analise\n");
+        printf("6) Sair do programa\n");
 
         scanf("%d", &opcao);
 
@@ -32,12 +35,15 @@ int main(){
                     break;
                 }
                 Analise a;
-                bool ok = encontrarCaminho(&expresso, &a, /*imprimir_passos=*/true);
-                // Após executar, também mostramos as métricas (útil para depurar):
-                printf("=== ANALISE (passos impressos) ===\n");
-                printf("Tempo (ms): %.3f\n", a.tempo_ms);
-                printf("Chamadas recursivas: %ld\n", a.chamadas_recursivas);
-                printf("Profundidade maxima: %d\n", a.profundidade_max);
+                Analise *pa = modo_analise_ativo ? &a : NULL;
+                bool ok = encontrarCaminho(&expresso, pa, true);
+                if (modo_analise_ativo) {
+                    printf("=== MODO DE ANALISE ===\n");
+                    printf("Tempo (ms): %.3f\n", a.tempo_ms);
+                    printf("Chamadas recursivas: %ld\n", a.chamadas_recursivas);
+                    printf("Profundidade maxima: %d\n", a.profundidade_max);
+                    printf("Resultado: %s\n", ok ? "Caminho encontrado" : "Sem caminho");
+                }
                 break;
             }
 
@@ -55,18 +61,26 @@ int main(){
                     break;
                 }
                 Analise a;
-                bool ok = encontrarCaminho(&expresso, &a, /*imprimir_passos=*/false);
-                printf("=== MODO DE ANALISE ===\n");
-                printf("Tempo (ms): %.3f\n", a.tempo_ms);
-                printf("Chamadas recursivas: %ld\n", a.chamadas_recursivas);
-                printf("Profundidade maxima: %d\n", a.profundidade_max);
-                // Se quiser, indique sucesso/fracasso sem poluir com os passos:
-                printf("Resultado: %s\n", ok ? "Caminho encontrado" : "Sem caminho");
+                Analise *pa = modo_analise_ativo ? &a : NULL;
+                bool ok = encontrarCaminho(&expresso, pa, false);
+                if (modo_analise_ativo) {
+                    printf("=== MODO DE ANALISE ===\n");
+                    printf("Tempo (ms): %.3f\n", a.tempo_ms);
+                    printf("Chamadas recursivas: %ld\n", a.chamadas_recursivas);
+                    printf("Profundidade maxima: %d\n", a.profundidade_max);
+                    printf("Resultado: %s\n", ok ? "Caminho encontrado" : "Sem caminho");
+                } else {
+                    printf("Executado sem imprimir passos e sem analise.\n");
+                }
                 break;
             }
 
             case 5:
-                // encerrar
+                modo_analise_ativo = !modo_analise_ativo;
+                printf("Modo de analise agora esta: %s\n", modo_analise_ativo ? "ATIVADO" : "DESATIVADO");
+                break;
+
+            case 6:
                 break;
 
             default:
