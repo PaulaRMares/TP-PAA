@@ -116,17 +116,6 @@ static bool dfs(int x, int y, int dur, int pecas, bool congelado, int prof) {
     chamadas_recursivas++;
     if (prof > profundidade_max) profundidade_max = prof;
 
-    imprimir_passo(x, y, dur, pecas);
-
-    if (mapa[x][y] == 'F' && dur > 0) {
-        encontrar_caminho = true;
-        if (g_imprimir_passos) {
-            if (pecas >= 4) puts("A jornada sera finalizada sem mais desafios.");
-            else            puts("A tripulacao finalizou sua jornada.");
-        }
-        return true;
-    }
-
     bool coletou = false;
     char original = mapa[x][y];
     if (mapa[x][y] == 'P') {
@@ -134,7 +123,18 @@ static bool dfs(int x, int y, int dur, int pecas, bool congelado, int prof) {
         pecas++;
         if (pecas >= total_pecas) congelado = true;
         dur += dur_aum;
-        mapa[x][y] = 'p'; // marca como coletado
+        mapa[x][y] = 'p';
+    }
+
+    imprimir_passo(x, y, dur, pecas);
+
+    if (mapa[x][y] == 'F' && dur > 0) {
+        encontrar_caminho = true;
+        if (g_imprimir_passos) {
+            if (pecas >= total_pecas) puts("A jornada sera finalizada sem mais desafios.");
+            else                      puts("A tripulacao finalizou sua jornada.");
+        }
+        return true;
     }
 
     size_t idx = IDX(pecas > 4 ? 4 : pecas, x, y);
@@ -160,9 +160,10 @@ static bool dfs(int x, int y, int dur, int pecas, bool congelado, int prof) {
         if (dfs(nx, ny, ndur, pecas, congelado, prof + 1)) return true;
     }
 
-    if (coletou) mapa[x][y] = original; // backtrack da peça
+    if (coletou) mapa[x][y] = original;
     return false;
 }
+
 
 /* ---------------------------------------------------------------
    Função pública: ponto de entrada do backtracking
