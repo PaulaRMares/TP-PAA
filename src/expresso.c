@@ -27,6 +27,8 @@ extern bool encontrar_caminho;
 static int profundidade_max = 0;
 static unsigned char *visitado = NULL; // 0/1 para estado visitado
 static bool g_imprimir_passos = true;  // controla impressão de cada passo
+extern int total_pecas;
+
 
 /* ---------------------------------------------------------------
    Estrutura de visitados:
@@ -93,11 +95,14 @@ static bool permiteEntrar(char c, int dx, int dy) {
    Impressão do passo (exigida pelo enunciado)
    --------------------------------------------------------------- */
 static void imprimir_passo(int x, int y, int dur, int pecas) {
-    if (!g_imprimir_passos) return; // <— respeita o modo de análise sem ruído
-    int restantes = 4 - pecas;
+    if (!g_imprimir_passos) return;
+    int restantes = total_pecas - pecas;
+    if (restantes < 0) restantes = 0;
+
     printf("Linha: %d, Coluna: %d; D: %d; pecas_restantes: %d\n",
-           x, y, dur, restantes < 0 ? 0 : restantes);
+           x, y, dur, restantes);
 }
+
 
 /* ---------------------------------------------------------------
    DFS/backtracking principal
@@ -127,7 +132,7 @@ static bool dfs(int x, int y, int dur, int pecas, bool congelado, int prof) {
     if (mapa[x][y] == 'P') {
         coletou = true;
         pecas++;
-        if (pecas >= 4) congelado = true;
+        if (pecas >= total_pecas) congelado = true;
         dur += dur_aum;
         mapa[x][y] = 'p'; // marca como coletado
     }

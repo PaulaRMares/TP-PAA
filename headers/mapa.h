@@ -26,6 +26,8 @@ extern int altura, largura;                 // dimensões do mapa
 extern int chamadas_recursivas;             // numero de chamadas recursivas (quanto o expresso andou)
 extern bool encontrar_caminho;              // se encontrou um caminho válido
 extern int backtrack_cont;
+extern int total_pecas;
+
 
 void lerArquivo(char *nome_arquivo, Expresso *expresso);
 void liberarMemoria();

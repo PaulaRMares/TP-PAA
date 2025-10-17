@@ -81,6 +81,10 @@ int main(){
                 break;
 
             case 6:
+            printf("Encerrando o programa e liberando memorias.\n");
+            liberarMemoria();
+            liberarVisitados();
+            printf("Memorias liberadas e encerando o programa.\n");
                 break;
 
             default:

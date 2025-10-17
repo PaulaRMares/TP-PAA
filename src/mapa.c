@@ -8,6 +8,8 @@ int altura, largura;                // altura e largura da matriz
 int chamadas_recursivas = 0;        // numero de chamadas recursivas (quanto o expresso andou)
 bool encontrar_caminho = false;     // se encontrou um caminho válido
 int backtrack_cont = 0;
+int total_pecas = 0;
+
 
 // le arquivo e salva o mapa e posicao inicial do expresso
 void lerArquivo(char *nome_arquivo, Expresso *expresso){
@@ -20,28 +22,29 @@ void lerArquivo(char *nome_arquivo, Expresso *expresso){
         exit(1);
     }
 
-    // le a primeira linha
+    if (mapa) liberarMemoria();
+
     fscanf(arquivo, "%d %d %d", &dur_atual, &dur_dim, &dur_aum);
     expresso->dur_atual = dur_atual;
-    expresso->dur_dim = dur_dim;
-    expresso->dur_aum = dur_aum;
+    expresso->dur_dim   = dur_dim;
+    expresso->dur_aum   = dur_aum;
 
-    // le a segunda linha
     fscanf(arquivo, "%d %d", &altura, &largura);
 
-    // aloca memoria pro mapa
     mapa = (char **)malloc(altura * sizeof(char *));
     for (int i = 0; i < altura; i++) {
-    mapa[i] = (char *)malloc(largura * sizeof(char));
+        mapa[i] = (char *)malloc(largura * sizeof(char));
     }
 
-    // le o mapa do arquivo
-    for(int i=0; i<altura; i++){
-        for(int j=0; j<largura; j++){
-            char caracter;
-            fscanf(arquivo, " %c", &caracter);
-            mapa[i][j] = caracter;
-            if(mapa[i][j] == 'X'){
+    total_pecas = 0;
+
+    for(int i = 0; i < altura; i++){
+        for(int j = 0; j < largura; j++){
+            char c;
+            fscanf(arquivo, " %c", &c);
+            mapa[i][j] = c;
+            if (c == 'P') total_pecas++;
+            if (c == 'X'){
                 expresso->pos_x = i;
                 expresso->pos_y = j;
             }
@@ -49,7 +52,10 @@ void lerArquivo(char *nome_arquivo, Expresso *expresso){
     }
 
     fclose(arquivo);
+
+    printf("Mapa carregado: %dx%d, pecas: %d\n", altura, largura, total_pecas);
 }
+
 
 // libera memoria do mapa
 void liberarMemoria(){
