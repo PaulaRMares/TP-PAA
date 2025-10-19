@@ -1,18 +1,24 @@
 #include "../headers/expresso.h"
 #include "../headers/mapa.h"
 
+void resetarVisitados(); 
+
 int main(){
     int opcao = 0;
     char arquivo[100];
     Expresso expresso;
     bool modo_analise_ativo = false;
 
-    printf("\nOs cientistas espaciais fizeram um programa para calcular um caminho possivel para a celebracao.\nVoce pode usar o programa, mas como dono do expresso tera que aumentar o salario de todos os \ncientistas que ajudaram no processo :) (nao negociavel) \n");
+    // Inicializa a variável global 'mapa' (de mapa.c) como nula
+    // para que a verificação 'if(!mapa)' funcione antes de carregar
+    mapa = NULL; 
+
+    printf("\nOs cientistas espaciais fizeram um programa para calcular um caminho possivel para a celebracao.\nVoce pode usar o programa, mas o dono do expresso tera que aumentar o salario de todos os \ncientistas que ajudaram no processo :) (nao negociavel) \n");
 
     while(opcao != 6){
         printf("\n ====================== MENU ====================== \n");
         printf("Status do modo de analise: %s\n", modo_analise_ativo ? "ATIVADO" : "DESATIVADO");
-        printf("1) Digite o nome do mapa a ser usado na exploracao\n");
+        printf("1) Carregar o mapa a ser usado na exploracao\n");
         printf("2) Encontrar caminho (imprimindo passos)\n");
         printf("3) Imprimir mapa\n");
         printf("4) Encontrar caminho (sem imprimir passos)\n");
@@ -25,8 +31,13 @@ int main(){
             case 1:
                 printf("Nome do arquivo: ");
                 scanf("%99s", arquivo);
-                lerArquivo(arquivo, &expresso);
-                printf("Arquivo lido com sucesso!\n");
+                
+                //  Checar o retorno de lerArquivo
+                if (lerArquivo(arquivo, &expresso)) {
+                    printf("Arquivo lido com sucesso!\n");
+                } else {
+                    printf("Falha ao ler o arquivo '%s'. Verifique o nome ou o caminho.\n", arquivo);
+                }
                 break;
 
             case 2: {
@@ -34,6 +45,10 @@ int main(){
                     printf("\nPor favor, escolha a opcao 1 primeiro.\n");
                     break;
                 }
+                
+                //  Resetar a matriz de visitados
+                resetarVisitados(); 
+
                 Analise a;
                 Analise *pa = modo_analise_ativo ? &a : NULL;
                 bool ok = encontrarCaminho(&expresso, pa, true);
@@ -60,6 +75,10 @@ int main(){
                     printf("\nPor favor, escolha a opcao 1 primeiro.\n");
                     break;
                 }
+                
+                //  Resetar a matriz de visitados aqui tbm
+                resetarVisitados(); 
+
                 Analise a;
                 Analise *pa = modo_analise_ativo ? &a : NULL;
                 bool ok = encontrarCaminho(&expresso, pa, false);
@@ -70,7 +89,12 @@ int main(){
                     printf("Profundidade maxima: %d\n", a.profundidade_max);
                     printf("Resultado: %s\n", ok ? "Caminho encontrado" : "Sem caminho");
                 } else {
-                    printf("Executado sem imprimir passos e sem analise.\n");
+                    //  Impressão de feedback para o usuário
+                    if (ok) {
+                         printf("Caminho encontrado (sem impressao de passos).\n");
+                    } else {
+                         printf("Nao foi possivel encontrar um caminho (sem impressao de passos).\n");
+                    }
                 }
                 break;
             }
@@ -82,8 +106,10 @@ int main(){
 
             case 6:
             printf("Encerrando o programa e liberando memorias.\n");
-            liberarMemoria();
-            liberarVisitados();
+            
+            //  liberarVisitados() foi removida
+            liberarMemoria(); 
+            
             printf("Memorias liberadas e encerando o programa.\n");
                 break;
 
@@ -92,5 +118,6 @@ int main(){
                 break;
         }
     }
+    
     return 0;
 }
